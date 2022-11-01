@@ -1,0 +1,18 @@
+overwrite: true
+schema: src/**
+documents: null
+generates:
+  src/models/__generated__/graphql.schema.json:
+    plugins:
+      - "introspection"
+  src/models/__generated__/graphql.ts:
+    config:
+      mappers:
+        Book: ../BookModel#BookModel
+        Author: ../BookModel#AuthorModel
+      federation: true
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+      - add:
+          content: "/* eslint-disable */"
