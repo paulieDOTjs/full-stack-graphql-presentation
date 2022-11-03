@@ -2,6 +2,12 @@ import { ApolloClient, HttpLink, from } from "@apollo/client";
 import { GRAPHQL_URL } from "../utils/config/GRAPHQL_URL";
 import { cache } from "./cache/cache";
 import { onError } from "@apollo/client/link/error";
+import { setContext } from "@apollo/client/link/context";
+
+const getUri = (operationName?: string) => {
+  const opVar = operationName ? `?operationName=${operationName}` : "";
+  return GRAPHQL_URL + opVar;
+};
 
 export const client = (function () {
   const errorLink = onError((error) => {
@@ -14,11 +20,16 @@ export const client = (function () {
     else console.error(error);
   });
 
-  const httpLink = new HttpLink({ uri: GRAPHQL_URL });
+  const operationNameLink = setContext((request) => {
+    const uri = getUri(request.operationName);
+    return { uri };
+  });
+
+  const httpLink = new HttpLink();
 
   return new ApolloClient({
     cache,
-    link: from([errorLink, httpLink]),
+    link: from([errorLink, operationNameLink, httpLink]),
     defaultOptions: {
       watchQuery: {
         fetchPolicy: "cache-first",

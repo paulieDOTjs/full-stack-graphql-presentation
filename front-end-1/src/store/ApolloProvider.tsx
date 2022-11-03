@@ -48,17 +48,17 @@ export const ApolloProvider: React.FC<React.PropsWithChildren> = ({
   const broadcast = useMemo(() => new BroadcastChannel(BROADCAST_KEY), []);
 
   const clearAndNotify = useCallback(async () => {
-    // broadcast.postMessage(BROADCAST_CLEAR_KEY);
+    broadcast.postMessage(BROADCAST_CLEAR_KEY);
     persistor?.purge();
   }, [broadcast, persistor]);
 
-  // useEffect(() => {
-  //   broadcast.onmessage = (ev) => {
-  //     if (ev.data === BROADCAST_CLEAR_KEY) {
-  //       shouldClear.current = true;
-  //     }
-  //   };
-  // }, [broadcast, client, persistor]);
+  useEffect(() => {
+    broadcast.onmessage = (ev) => {
+      if (ev.data === BROADCAST_CLEAR_KEY) {
+        shouldClear.current = true;
+      }
+    };
+  }, [broadcast, client, persistor]);
 
   useEffect(() => {
     if (!client) return;
@@ -66,53 +66,53 @@ export const ApolloProvider: React.FC<React.PropsWithChildren> = ({
     client.onResetStore(clearAndNotify);
   }, [clearAndNotify, client]);
 
-  // const handleRefocus = useCallback(() => {
-  //   if (shouldRefresh.current) {
-  //     let crossTabCache: NormalizedCacheObject = {};
-  //     let localCache: NormalizedCacheObject = {};
-  //     try {
-  //       const unparsed = window.localStorage.getItem(CACHE_KEY);
-  //       if (unparsed) {
-  //         crossTabCache = JSON.parse(unparsed);
-  //       }
-  //     } catch (err) {
-  //       return;
-  //     }
-  //     if (!shouldClear.current) {
-  //       localCache = cache.extract();
-  //     }
+  const handleRefocus = useCallback(() => {
+    if (shouldRefresh.current) {
+      let crossTabCache: NormalizedCacheObject = {};
+      let localCache: NormalizedCacheObject = {};
+      try {
+        const unparsed = window.localStorage.getItem(CACHE_KEY);
+        if (unparsed) {
+          crossTabCache = JSON.parse(unparsed);
+        }
+      } catch (err) {
+        return;
+      }
+      if (!shouldClear.current) {
+        localCache = cache.extract();
+      }
 
-  //     shouldClear.current = false;
-  //     shouldRefresh.current = false;
-  //     cache.restore({ ...localCache, ...crossTabCache });
-  //   }
-  // }, []);
+      shouldClear.current = false;
+      shouldRefresh.current = false;
+      cache.restore({ ...localCache, ...crossTabCache });
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   window.addEventListener("focus", handleRefocus);
-  //   return () => {
-  //     window.removeEventListener("focus", handleRefocus);
-  //   };
-  // }, [handleRefocus]);
+  useEffect(() => {
+    window.addEventListener("focus", handleRefocus);
+    return () => {
+      window.removeEventListener("focus", handleRefocus);
+    };
+  }, [handleRefocus]);
 
-  // const handleCacheUpdated = useCallback(
-  //   (event: StorageEvent | CustomEvent) => {
-  //     if (
-  //       (event as StorageEvent)?.key &&
-  //       (event as StorageEvent).key === CACHE_KEY
-  //     ) {
-  //       shouldRefresh.current = true;
-  //     }
-  //   },
-  //   []
-  // );
+  const handleCacheUpdated = useCallback(
+    (event: StorageEvent | CustomEvent) => {
+      if (
+        (event as StorageEvent)?.key &&
+        (event as StorageEvent).key === CACHE_KEY
+      ) {
+        shouldRefresh.current = true;
+      }
+    },
+    []
+  );
 
-  // useEffect(() => {
-  //   window.addEventListener("storage", handleCacheUpdated);
-  //   return () => {
-  //     window.removeEventListener("storage", handleCacheUpdated);
-  //   };
-  // }, [handleCacheUpdated]);
+  useEffect(() => {
+    window.addEventListener("storage", handleCacheUpdated);
+    return () => {
+      window.removeEventListener("storage", handleCacheUpdated);
+    };
+  }, [handleCacheUpdated]);
 
   if (!client || persistor === undefined) return null;
 

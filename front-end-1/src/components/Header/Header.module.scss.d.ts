@@ -9,6 +9,7 @@ interface CssExports {
   'LIGHT_GRAY': string;
   'LIGHT_GREY': string;
   'WHITE': string;
+  'header': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
