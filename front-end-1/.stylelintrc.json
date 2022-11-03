@@ -1,0 +1,34 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-css-modules",
+    "stylelint-config-sass-guidelines",
+    "stylelint-scss",
+    "stylelint-a11y/recommended"
+  ],
+  "plugins": ["stylelint-a11y"],
+  "rules": {
+    "a11y/media-prefers-reduced-motion": null,
+    "a11y/font-size-is-readable": null,
+    "string-quotes": "double",
+    "selector-class-pattern": "^App$|^Mui|(^[a-z][a-z0-9]*)(-[a-z0-9]+)*$",
+    "selector-id-pattern": "root",
+    "selector-max-id": 1,
+    "order/properties-alphabetical-order": null,
+    "max-nesting-depth": null,
+    "property-no-unknown": true,
+    "selector-no-qualifying-type": null,
+    "scss/at-mixin-pattern": "^([A-Z][A-Z0-9]*)(_[A-Z0-9]+)*$|(^[a-z][a-z0-9]*)(-[a-z0-9]+)*$",
+    "scss/dollar-variable-pattern": "^([A-Z][A-Z0-9]*)(_[A-Z0-9]+)*$|(^[a-z][a-z0-9]*)(-[a-z0-9]+)*$",
+    "selector-max-compound-selectors": null,
+    "property-case": ["lower", { "ignoreSelectors": [":export"] }],
+    "color-function-notation": "legacy",
+    "declaration-empty-line-before": null,
+    "order/order": null,
+    "no-descending-specificity": null,
+    "property-disallowed-list": ["/float/"],
+    "function-parentheses-newline-inside": null,
+    "indentation": [2, { "ignore": ["inside-parens"] }]
+  },
+  "ignoreFiles": ["**/reset.*css"]
+}

@@ -1,0 +1,12 @@
+schema:
+  - http://localhost:4000/graphql
+  - ./src/store/schema/**/*.graphql
+documents: null
+generates:
+  src/store/__generated__/graphql.schema.json:
+    plugins:
+      - "introspection"
+    config:
+      minify: true
+      descriptions: false
+      schemaDescription: false

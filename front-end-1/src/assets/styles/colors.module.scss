@@ -1,0 +1,20 @@
+/* stylelint-disable property-no-unknown */
+$WHITE: rgb(255, 255, 255);
+$LIGHT_GREY: rgba(191, 191, 191,);
+$LIGHT_GRAY: rgba(191, 191, 191,);
+$GREY: #8c8c8c;
+$GRAY: #8c8c8c;
+$DARK_GREY: #2a2a2a;
+$DARK_GRAY: #2a2a2a;
+$BLACK: rgb(0, 0, 0);
+
+:export {
+  WHITE: $WHITE;
+  LIGHT_GREY: $LIGHT_GREY;
+  LIGHT_GRAY: $LIGHT_GRAY;
+  GREY: $GREY;
+  GRAY: $GRAY;
+  DARK_GREY: $DARK_GREY;
+  DARK_GRAY: $DARK_GRAY;
+  BLACK: $BLACK;
+}

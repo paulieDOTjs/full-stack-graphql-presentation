@@ -1,0 +1,77 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "prettier", "sort-imports-es6-autofix"],
+  "env": { "browser": true, "node": true },
+  "extends": [
+    "prettier",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "rules": {
+    "prettier/prettier": ["warn"],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_" }
+    ],
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "react/no-unescaped-entities": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-empty-pattern": "off",
+    "no-console": ["error", { "allow": ["error", "warn"] }],
+    "react/prop-types": "off",
+    "sort-imports-es6-autofix/sort-imports-es6": [
+      "warn",
+      {
+        "ignoreCase": false,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "single", "multiple"]
+      }
+    ]
+  },
+  "overrides": [
+    { "files": ["./src/**"], "processor": "@graphql-eslint/graphql" },
+    {
+      "files": ["./src/**/*.graphql"],
+      "extends": "plugin:@graphql-eslint/operations-recommended",
+      "rules": {
+        "@graphql-eslint/require-id-when-available": "warn",
+        "@graphql-eslint/executable-definitions": 0,
+        "@graphql-eslint/no-deprecated": "warn",
+        "@graphql-eslint/naming-convention": [
+          "error",
+          {
+            "VariableDefinition": "camelCase",
+            "OperationDefinition": {
+              "style": "PascalCase",
+              "forbiddenPrefixes": [
+                "Query",
+                "Mutation",
+                "Subscription",
+                "Fragment"
+              ],
+              "forbiddenSuffixes": [
+                "Query",
+                "Mutation",
+                "Subscription",
+                "Fragment"
+              ]
+            },
+            "FragmentDefinition": {
+              "style": "PascalCase",
+              "forbiddenPrefixes": ["Get"]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "parserOptions": {
+    "operations": "./src/**"
+  },
+  "settings": { "react": { "version": "detect" } },
+  "ignorePatterns": ["node_modules", "**/*module.scss.d.ts"]
+}

@@ -1,0 +1,34 @@
+schema: ./src/store/__generated__/graphql.schema.json
+documents: ./src/**
+generates:
+  src/store/__generated__/graphql.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - add:
+          content: /* eslint-disable */
+    config:
+      maybeValue: T | null | undefined
+      strictScalars: true
+      allowEnumStringTypes: true
+      useImplementingTypes: true
+      avoidOptionals:
+        field: true
+        object: true
+        defaultValue: true
+        inputValue: false
+      scalars:
+        _Any: any
+        _FieldSet: any
+
+  src/store/__generated__/StrictTypedTypePolicies.ts:
+    plugins:
+      - typescript-apollo-client-helpers
+      - add:
+          content: "/* eslint-disable */"
+
+  src/store/__generated__/PossibleTypesResultData.ts:
+    plugins:
+      - "fragment-matcher"
+      - add:
+          content: "/* eslint-disable */"

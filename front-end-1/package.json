@@ -3,23 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
+    "start": "webpack serve --config ./webpack.config.ts --mode=development",
+    "build": "webpack --config ./webpack.config.ts --mode=production",
+    "generate": "yarn generate:download && yarn generate:typescript",
+    "generate:download": "graphql-codegen --config graphql.download.yaml",
+    "generate:typescript": "graphql-codegen --config graphql.config.yaml",
+    "prestart": "yarn generate"
   },
   "dependencies": {
     "@apollo/client": "^3.7.1",
+    "@nextui-org/react": "^1.0.0-beta.10",
+    "apollo3-cache-persist": "^0.14.1",
+    "classnames": "^2.3.2",
     "graphql": "^16.6.0",
-    "graphql-config": "^4.3.6",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
     "typescript": "^4.4.2",
-    "web-vitals": "^2.1.0"
+    "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^3.2.1",
-    "@graphql-codegen/cli": "^2.13.9",
+    "@graphql-codegen/cli": "^2.13.11",
     "@graphql-codegen/fragment-matcher": "^3.3.1",
     "@graphql-codegen/introspection": "^2.2.1",
     "@graphql-codegen/typed-document-node": "^2.3.6",
@@ -30,14 +37,44 @@
     "@graphql-inspector/cli": "^3.4.0",
     "@graphql-inspector/config": "^3.4.0",
     "@graphql-tools/utils": "^9.0.0",
+    "@types/lodash": "^4.14.187",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
+    "@types/react-dom": "^18.0.0",
+    "@types/webpack-dev-server": "^4.7.2",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "css-loader": "^6.7.1",
+    "css-modules-typescript-loader": "^4.0.1",
+    "eslint": "^8.26.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
+    "eslint-webpack-plugin": "^3.2.0",
+    "graphql-config": "^4.3.6",
+    "html-webpack-plugin": "^5.5.0",
+    "postcss": "^8.4.18",
+    "postcss-loader": "^7.0.1",
+    "prettier": "^2.7.1",
+    "sass": "^1.55.0",
+    "sass-loader": "^13.1.0",
+    "style-loader": "^3.3.1",
+    "stylelint": "^14.14.1",
+    "stylelint-a11y": "^1.2.3",
+    "stylelint-config-css-modules": "^4.1.0",
+    "stylelint-config-sass-guidelines": "^9.0.1",
+    "stylelint-config-standard": "^29.0.0",
+    "stylelint-scss": "^4.3.0",
+    "ts-loader": "^9.4.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
   },
   "browserslist": {
     "production": [

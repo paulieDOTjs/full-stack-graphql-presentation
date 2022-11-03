@@ -1,0 +1,5 @@
+@use "../../assets/styles/colors.module.scss" as COLORS;
+
+.header {
+  background-color: COLORS.$BLACK;
+}
