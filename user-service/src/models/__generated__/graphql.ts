@@ -1,12 +1,13 @@
 /* eslint-disable */
-import { GraphQLResolveInfo } from 'graphql';
-import { BookModel, AuthorModel } from '../BookModel';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { UserType } from '../User';
+import { ArticleType } from '../Article';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -14,37 +15,107 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  _Any: any;
   _FieldSet: any;
 };
 
-export type Author = {
-  __typename?: 'Author';
-  books?: Maybe<Array<Maybe<Book>>>;
-  id: Scalars['Int'];
-  name: Scalars['String'];
+export type Article = {
+  __typename?: 'Article';
+  author?: Maybe<IUser>;
+  body: Scalars['String'];
+  id: Scalars['ID'];
+  title: Scalars['String'];
 };
 
-export type Book = {
-  __typename?: 'Book';
-  author?: Maybe<Author>;
-  id: Scalars['Int'];
-  title: Scalars['String'];
+export type ArticleAddInput = {
+  articleBody: Scalars['String'];
+  articleTitle: Scalars['String'];
+  myID: Scalars['String'];
+};
+
+export type ArticleUpdateInput = {
+  articleBody: Scalars['String'];
+  articleID: Scalars['String'];
+  articleTitle: Scalars['String'];
+  myID: Scalars['String'];
+};
+
+export type BasicError = {
+  __typename?: 'BasicError';
+  message: Scalars['String'];
+};
+
+export type BasicResponse = BasicError | BasicSuccess;
+
+export type BasicSuccess = {
+  __typename?: 'BasicSuccess';
+  message: Scalars['String'];
+};
+
+export type IUser = {
+  email?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  lastName?: Maybe<Scalars['String']>;
+  username: Scalars['String'];
+};
+
+export type Me = IUser & {
+  __typename?: 'Me';
+  email?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  lastName?: Maybe<Scalars['String']>;
+  myArticles?: Maybe<Array<Article>>;
+  username: Scalars['String'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  addArticle?: Maybe<Article>;
+  deleteArticle?: Maybe<BasicResponse>;
+  updateArticle?: Maybe<Article>;
+};
+
+
+export type MutationAddArticleArgs = {
+  articleInput: ArticleAddInput;
+};
+
+
+export type MutationDeleteArticleArgs = {
+  articleID: Scalars['ID'];
+};
+
+
+export type MutationUpdateArticleArgs = {
+  articleInput: ArticleUpdateInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  authors?: Maybe<Array<Maybe<Author>>>;
-  books?: Maybe<Array<Maybe<Book>>>;
+  _service: _Service;
+  article?: Maybe<Article>;
+  me?: Maybe<Me>;
 };
 
 
-export type QueryAuthorsArgs = {
-  name?: InputMaybe<Scalars['String']>;
+export type QueryArticleArgs = {
+  id: Scalars['ID'];
 };
 
+export type User = IUser & {
+  __typename?: 'User';
+  email?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  lastName?: Maybe<Scalars['String']>;
+  username: Scalars['String'];
+};
 
-export type QueryBooksArgs = {
-  searchTitle?: InputMaybe<Scalars['String']>;
+export type _Service = {
+  __typename?: '_Service';
+  sdl?: Maybe<Scalars['String']>;
 };
 
 
@@ -116,46 +187,176 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Author: ResolverTypeWrapper<AuthorModel>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Book: ResolverTypeWrapper<BookModel>;
-  Query: ResolverTypeWrapper<{}>;
+  Article: ResolverTypeWrapper<ArticleType>;
+  ArticleAddInput: ArticleAddInput;
+  ArticleUpdateInput: ArticleUpdateInput;
+  BasicError: ResolverTypeWrapper<BasicError>;
+  BasicResponse: ResolversTypes['BasicError'] | ResolversTypes['BasicSuccess'];
+  BasicSuccess: ResolverTypeWrapper<BasicSuccess>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  IUser: ResolverTypeWrapper<UserType>;
+  Me: ResolverTypeWrapper<UserType>;
+  Mutation: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<{}>;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  User: ResolverTypeWrapper<UserType>;
+  _Any: ResolverTypeWrapper<Scalars['_Any']>;
+  _FieldSet: ResolverTypeWrapper<Scalars['_FieldSet']>;
+  _Service: ResolverTypeWrapper<_Service>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Author: AuthorModel;
-  Int: Scalars['Int'];
-  String: Scalars['String'];
-  Book: BookModel;
-  Query: {};
+  Article: ArticleType;
+  ArticleAddInput: ArticleAddInput;
+  ArticleUpdateInput: ArticleUpdateInput;
+  BasicError: BasicError;
+  BasicResponse: ResolversParentTypes['BasicError'] | ResolversParentTypes['BasicSuccess'];
+  BasicSuccess: BasicSuccess;
   Boolean: Scalars['Boolean'];
+  ID: Scalars['ID'];
+  IUser: UserType;
+  Me: UserType;
+  Mutation: {};
+  Query: {};
+  String: Scalars['String'];
+  User: UserType;
+  _Any: Scalars['_Any'];
+  _FieldSet: Scalars['_FieldSet'];
+  _Service: _Service;
 };
 
-export type AuthorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = {
-  books?: Resolver<Maybe<Array<Maybe<ResolversTypes['Book']>>>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+export type ExtendsDirectiveArgs = { };
+
+export type ExtendsDirectiveResolver<Result, Parent, ContextType = any, Args = ExtendsDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type ExternalDirectiveArgs = {
+  reason?: Maybe<Scalars['String']>;
 };
 
-export type BookResolvers<ContextType = any, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {
-  author?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+export type ExternalDirectiveResolver<Result, Parent, ContextType = any, Args = ExternalDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type KeyDirectiveArgs = {
+  fields: Scalars['_FieldSet'];
+  resolvable?: Maybe<Scalars['Boolean']>;
+};
+
+export type KeyDirectiveResolver<Result, Parent, ContextType = any, Args = KeyDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type ProvidesDirectiveArgs = {
+  fields: Scalars['_FieldSet'];
+};
+
+export type ProvidesDirectiveResolver<Result, Parent, ContextType = any, Args = ProvidesDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type RequiresDirectiveArgs = {
+  fields: Scalars['_FieldSet'];
+};
+
+export type RequiresDirectiveResolver<Result, Parent, ContextType = any, Args = RequiresDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type TagDirectiveArgs = {
+  name: Scalars['String'];
+};
+
+export type TagDirectiveResolver<Result, Parent, ContextType = any, Args = TagDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type ArticleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article']> = {
+  author?: Resolver<Maybe<ResolversTypes['IUser']>, ParentType, ContextType>;
+  body?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type BasicErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['BasicError'] = ResolversParentTypes['BasicError']> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BasicResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['BasicResponse'] = ResolversParentTypes['BasicResponse']> = {
+  __resolveType: TypeResolveFn<'BasicError' | 'BasicSuccess', ParentType, ContextType>;
+};
+
+export type BasicSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['BasicSuccess'] = ResolversParentTypes['BasicSuccess']> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['IUser'] = ResolversParentTypes['IUser']> = {
+  __resolveType: TypeResolveFn<'Me' | 'User', ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type MeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Me'] = ResolversParentTypes['Me']> = {
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  myArticles?: Resolver<Maybe<Array<ResolversTypes['Article']>>, ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  addArticle?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<MutationAddArticleArgs, 'articleInput'>>;
+  deleteArticle?: Resolver<Maybe<ResolversTypes['BasicResponse']>, ParentType, ContextType, RequireFields<MutationDeleteArticleArgs, 'articleID'>>;
+  updateArticle?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<MutationUpdateArticleArgs, 'articleInput'>>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  authors?: Resolver<Maybe<Array<Maybe<ResolversTypes['Author']>>>, ParentType, ContextType, RequireFields<QueryAuthorsArgs, never>>;
-  books?: Resolver<Maybe<Array<Maybe<ResolversTypes['Book']>>>, ParentType, ContextType, RequireFields<QueryBooksArgs, never>>;
+  _service?: Resolver<ResolversTypes['_Service'], ParentType, ContextType>;
+  article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<QueryArticleArgs, 'id'>>;
+  me?: Resolver<Maybe<ResolversTypes['Me']>, ParentType, ContextType>;
+};
+
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export interface _AnyScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['_Any'], any> {
+  name: '_Any';
+}
+
+export interface _FieldSetScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['_FieldSet'], any> {
+  name: '_FieldSet';
+}
+
+export type _ServiceResolvers<ContextType = any, ParentType extends ResolversParentTypes['_Service'] = ResolversParentTypes['_Service']> = {
+  sdl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
-  Author?: AuthorResolvers<ContextType>;
-  Book?: BookResolvers<ContextType>;
+  Article?: ArticleResolvers<ContextType>;
+  BasicError?: BasicErrorResolvers<ContextType>;
+  BasicResponse?: BasicResponseResolvers<ContextType>;
+  BasicSuccess?: BasicSuccessResolvers<ContextType>;
+  IUser?: IUserResolvers<ContextType>;
+  Me?: MeResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
+  _Any?: GraphQLScalarType;
+  _FieldSet?: GraphQLScalarType;
+  _Service?: _ServiceResolvers<ContextType>;
 };
 
+export type DirectiveResolvers<ContextType = any> = {
+  extends?: ExtendsDirectiveResolver<any, any, ContextType>;
+  external?: ExternalDirectiveResolver<any, any, ContextType>;
+  key?: KeyDirectiveResolver<any, any, ContextType>;
+  provides?: ProvidesDirectiveResolver<any, any, ContextType>;
+  requires?: RequiresDirectiveResolver<any, any, ContextType>;
+  tag?: TagDirectiveResolver<any, any, ContextType>;
+};

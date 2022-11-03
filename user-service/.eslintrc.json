@@ -2,17 +2,15 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "prettier", "sort-imports-es6-autofix"],
+  "env": {
+    "node": true
+  },
   "extends": [
+    "prettier",
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:@typescript-eslint/recommended"
   ],
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": 2021,
-    "project": "./tsconfig.json"
-  },
   "rules": {
     "prettier/prettier": ["warn", { "endOfLine": "auto" }],
     "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -26,5 +24,26 @@
         "memberSyntaxSortOrder": ["none", "all", "single", "multiple"]
       }
     ]
+  },
+  "overrides": [
+    {
+      "files": ["./src/**"],
+      "processor": "@graphql-eslint/graphql"
+    },
+    {
+      "files": ["./src/**/*.graphql"],
+      "extends": "plugin:@graphql-eslint/schema-recommended",
+      "rules": {
+        "@graphql-eslint/require-description": "off",
+        "@graphql-eslint/no-unreachable-types": "off",
+        "@graphql-eslint/strict-id-in-types": "off"
+      }
+    }
+  ],
+  "parserOptions": {
+    "schema": "./src/**/",
+    "schemaOptions": {
+      "assumeValid": true
+    }
   }
 }

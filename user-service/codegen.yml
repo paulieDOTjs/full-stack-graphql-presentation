@@ -1,16 +1,14 @@
 overwrite: true
-schema: src/**
-documents: null
+schema: 
+  - ./src/**
 generates:
-  src/models/__generated__/graphql.schema.json:
-    plugins:
-      - "introspection"
   src/models/__generated__/graphql.ts:
     config:
       mappers:
-        Book: ../BookModel#BookModel
-        Author: ../BookModel#AuthorModel
-      federation: true
+        IUser: ../User#UserType
+        User: ../User#UserType
+        Me: ../User#UserType
+        Article: ../Article#ArticleType
     plugins:
       - "typescript"
       - "typescript-resolvers"

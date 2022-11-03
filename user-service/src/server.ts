@@ -2,17 +2,15 @@
 
 import dotenv from "dotenv";
 import express from "express";
-import logger from "morgan";
 import path from "path";
 import { apollo } from "./apollo";
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || "4000";
+const port = process.env.PORT ?? "4000";
 
 app.set("port", port);
-app.use(logger("dev"));
 app.use(express.json());
 
 app.use("/public", express.static(path.join(__dirname, "../public")));
