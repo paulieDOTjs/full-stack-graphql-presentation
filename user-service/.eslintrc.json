@@ -35,8 +35,7 @@
       "extends": "plugin:@graphql-eslint/schema-recommended",
       "rules": {
         "@graphql-eslint/require-description": "off",
-        "@graphql-eslint/no-unreachable-types": "off",
-        "@graphql-eslint/strict-id-in-types": "off"
+        "@graphql-eslint/no-unreachable-types": "off"
       }
     }
   ],

@@ -1,7 +1,7 @@
 import { gql } from "apollo-server-core";
 
 export const userSchema = gql`
-  type Query {
+  extend type Query {
     me: Me
   }
 

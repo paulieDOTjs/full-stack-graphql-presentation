@@ -1,7 +1,8 @@
 /* eslint-disable */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { UserType } from '../User';
-import { ArticleType } from '../Article';
+import { PizzaType } from '../Pizza';
+import { ToppingType } from '../Topping';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -19,27 +20,6 @@ export type Scalars = {
   _FieldSet: any;
 };
 
-export type Article = {
-  __typename?: 'Article';
-  author?: Maybe<IUser>;
-  body: Scalars['String'];
-  id: Scalars['ID'];
-  title: Scalars['String'];
-};
-
-export type ArticleAddInput = {
-  articleBody: Scalars['String'];
-  articleTitle: Scalars['String'];
-  myID: Scalars['String'];
-};
-
-export type ArticleUpdateInput = {
-  articleBody: Scalars['String'];
-  articleID: Scalars['String'];
-  articleTitle: Scalars['String'];
-  myID: Scalars['String'];
-};
-
 export type BasicError = {
   __typename?: 'BasicError';
   message: Scalars['String'];
@@ -50,6 +30,11 @@ export type BasicResponse = BasicError | BasicSuccess;
 export type BasicSuccess = {
   __typename?: 'BasicSuccess';
   message: Scalars['String'];
+};
+
+export type IPurchasableItem = {
+  cost?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
 };
 
 export type IUser = {
@@ -66,42 +51,24 @@ export type Me = IUser & {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   lastName?: Maybe<Scalars['String']>;
-  myArticles?: Maybe<Array<Article>>;
   username: Scalars['String'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addArticle?: Maybe<Article>;
-  deleteArticle?: Maybe<BasicResponse>;
-  updateArticle?: Maybe<Article>;
+  test?: Maybe<BasicResponse>;
 };
 
 
-export type MutationAddArticleArgs = {
-  articleInput: ArticleAddInput;
-};
-
-
-export type MutationDeleteArticleArgs = {
-  articleID: Scalars['ID'];
-};
-
-
-export type MutationUpdateArticleArgs = {
-  articleInput: ArticleUpdateInput;
+export type MutationTestArgs = {
+  message: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
   _service: _Service;
-  article?: Maybe<Article>;
   me?: Maybe<Me>;
-};
-
-
-export type QueryArticleArgs = {
-  id: Scalars['ID'];
+  test?: Maybe<BasicResponse>;
 };
 
 export type User = IUser & {
@@ -187,14 +154,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Article: ResolverTypeWrapper<ArticleType>;
-  ArticleAddInput: ArticleAddInput;
-  ArticleUpdateInput: ArticleUpdateInput;
   BasicError: ResolverTypeWrapper<BasicError>;
   BasicResponse: ResolversTypes['BasicError'] | ResolversTypes['BasicSuccess'];
   BasicSuccess: ResolverTypeWrapper<BasicSuccess>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  IPurchasableItem: never;
   IUser: ResolverTypeWrapper<UserType>;
   Me: ResolverTypeWrapper<UserType>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -208,14 +174,13 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Article: ArticleType;
-  ArticleAddInput: ArticleAddInput;
-  ArticleUpdateInput: ArticleUpdateInput;
   BasicError: BasicError;
   BasicResponse: ResolversParentTypes['BasicError'] | ResolversParentTypes['BasicSuccess'];
   BasicSuccess: BasicSuccess;
   Boolean: Scalars['Boolean'];
+  Float: Scalars['Float'];
   ID: Scalars['ID'];
+  IPurchasableItem: never;
   IUser: UserType;
   Me: UserType;
   Mutation: {};
@@ -262,14 +227,6 @@ export type TagDirectiveArgs = {
 
 export type TagDirectiveResolver<Result, Parent, ContextType = any, Args = TagDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type ArticleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article']> = {
-  author?: Resolver<Maybe<ResolversTypes['IUser']>, ParentType, ContextType>;
-  body?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type BasicErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['BasicError'] = ResolversParentTypes['BasicError']> = {
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -282,6 +239,12 @@ export type BasicResponseResolvers<ContextType = any, ParentType extends Resolve
 export type BasicSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['BasicSuccess'] = ResolversParentTypes['BasicSuccess']> = {
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IPurchasableItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['IPurchasableItem'] = ResolversParentTypes['IPurchasableItem']> = {
+  __resolveType: TypeResolveFn<null, ParentType, ContextType>;
+  cost?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
 export type IUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['IUser'] = ResolversParentTypes['IUser']> = {
@@ -298,21 +261,18 @@ export type MeResolvers<ContextType = any, ParentType extends ResolversParentTyp
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  myArticles?: Resolver<Maybe<Array<ResolversTypes['Article']>>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addArticle?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<MutationAddArticleArgs, 'articleInput'>>;
-  deleteArticle?: Resolver<Maybe<ResolversTypes['BasicResponse']>, ParentType, ContextType, RequireFields<MutationDeleteArticleArgs, 'articleID'>>;
-  updateArticle?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<MutationUpdateArticleArgs, 'articleInput'>>;
+  test?: Resolver<Maybe<ResolversTypes['BasicResponse']>, ParentType, ContextType, RequireFields<MutationTestArgs, 'message'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   _service?: Resolver<ResolversTypes['_Service'], ParentType, ContextType>;
-  article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<QueryArticleArgs, 'id'>>;
   me?: Resolver<Maybe<ResolversTypes['Me']>, ParentType, ContextType>;
+  test?: Resolver<Maybe<ResolversTypes['BasicResponse']>, ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -338,10 +298,10 @@ export type _ServiceResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type Resolvers<ContextType = any> = {
-  Article?: ArticleResolvers<ContextType>;
   BasicError?: BasicErrorResolvers<ContextType>;
   BasicResponse?: BasicResponseResolvers<ContextType>;
   BasicSuccess?: BasicSuccessResolvers<ContextType>;
+  IPurchasableItem?: IPurchasableItemResolvers<ContextType>;
   IUser?: IUserResolvers<ContextType>;
   Me?: MeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

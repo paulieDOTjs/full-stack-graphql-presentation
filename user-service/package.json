@@ -11,7 +11,7 @@
     "generate:prisma": "npx prisma generate",
     "generate:graphql": "graphql-codegen --config codegen.yml",
     "watch": "yarn generate --watch \"src/**/*.ts\"",
-    "prestart": "yarn generate",
+    "prestart": "yarn install",
     "pregenerate": "yarn install"
   },
   "dependencies": {

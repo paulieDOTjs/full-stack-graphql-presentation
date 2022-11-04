@@ -1,6 +1,6 @@
 overwrite: true
-schema: 
-  - ./src/**
+schema:
+  - http://localhost:4000/graphql
 generates:
   src/models/__generated__/graphql.ts:
     config:
@@ -8,7 +8,7 @@ generates:
         IUser: ../User#UserType
         User: ../User#UserType
         Me: ../User#UserType
-        Article: ../Article#ArticleType
+      allowEnumStringTypes: true
     plugins:
       - "typescript"
       - "typescript-resolvers"
