@@ -11,11 +11,53 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  username  String  @unique
-  firstName String?
-  lastName  String?
-  email     String  @unique
+  id                       String    @id @default(auto()) @map("_id") @db.ObjectId
+  username                 String    @unique
+  firstName                String?
+  lastName                 String?
+  email                    String    @unique
+  orderIDs                 String[]  @db.ObjectId
+  myOrders                 Order[]
+  myAddresses              Address[] @relation(name: "myAddresses")
+  defaultDeliveryAddressId String    @unique @db.ObjectId
+  defaultDeliveryAddress   Address?  @relation(name: "defaultDelivery", fields: [defaultDeliveryAddressId], references: [id], onUpdate: NoAction)
+  defaultBillingAddressId  String    @unique @db.ObjectId
+  defaultBillingAddress    Address?  @relation(name: "defaultBilling", fields: [defaultBillingAddressId], references: [id], onUpdate: NoAction)
 
   @@map("users")
+}
+
+model Order {
+  id                String         @id @default(auto()) @map("_id") @db.ObjectId
+  subtotal          Float
+  userId            String         @db.ObjectId
+  customer          User           @relation(fields: [userId], references: [id])
+  itemIds           String[]
+  placedAt          DateTime       @default(now())
+  paymentReceived   Boolean        @default(false)
+  billingAddressId  String?        @db.ObjectId
+  billingAddress    Address?       @relation(name: "billing", fields: [billingAddressId], references: [id])
+  deliveryAddressId String?        @db.ObjectId
+  deliveryMethod    DeliveryMethod
+  deliveredAt       DateTime?
+  deliveryAddress   Address?       @relation(name: "delivery", fields: [deliveryAddressId], references: [id])
+}
+
+enum DeliveryMethod {
+  PICKUP
+  DELIVERY
+}
+
+model Address {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  street          String
+  city            String
+  state           String
+  zipCode         Int
+  billing         Order[] @relation("billing")
+  delivery        Order[] @relation("delivery")
+  userId          String  @db.ObjectId
+  user            User    @relation("myAddresses", fields: [userId], references: [id])
+  defaultBilling  User?   @relation("defaultBilling")
+  defaultDelivery User?   @relation("defaultDelivery")
 }
